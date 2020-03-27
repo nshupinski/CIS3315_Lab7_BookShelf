@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Lab7_BookShelf_DynamicUI</string>
+    <string-array name="titles">
+        <item>Wuthering Heights</item>
+        <item>The BFG</item>
+        <item>Catching The Big Fish</item>
+        <item>Ishmael</item>
+        <item>A Glimpse of Freedom</item>
+        <item>Absolved From Allegiance</item>
+        <item>Code</item>
+        <item>The Little Prince</item>
+        <item>Exit Music</item>
+        <item>Digital Movie-Making</item>
+    </string-array>
+
+    <string-array name="authors">
+        <item>Emily Bronte</item>
+        <item>Roald Dahl</item>
+        <item>David Lynch</item>
+        <item>Daniel Quinn</item>
+        <item>Douglas Shupinski</item>
+        <item>Douglas Shupinski</item>
+        <item>Charles Petzold</item>
+        <item>Antoinede Saint-Exupery</item>
+        <item>Mac Randall</item>
+        <item>Tony Mullen</item>
+    </string-array>
+</resources>
