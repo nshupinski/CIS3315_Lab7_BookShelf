@@ -8,14 +8,16 @@
 
     <FrameLayout
         android:id="@+id/landContainerList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_width="330dp"
+        android:layout_height="441dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></FrameLayout>
 
     <FrameLayout
         android:id="@+id/landContainerDetails"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_width="401dp"
+        android:layout_height="413dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"></FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
