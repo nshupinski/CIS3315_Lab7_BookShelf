@@ -88,10 +88,11 @@ public class BookDetailsFragment extends Fragment {
         // retrieve bundle
         int index;
         Bundle bundle = getArguments();
-        index = bundle.getInt("Jeffery");
-
-        txtBookName.setText(titles[index]);
-        txtAuthor.setText(authors[index]);
+        if(bundle != null) {
+            index = bundle.getInt("Jeffery");
+            txtBookName.setText(titles[index]);
+            txtAuthor.setText(authors[index]);
+        }
 
         return v;
     }

@@ -5,18 +5,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CallBackInterface {
 
-    BookDetailsFragment detailsFragment;
-    BookListFragment listFragment;
-
+    BookListFragment listFragment = new BookListFragment();
+    BookDetailsFragment detailsFragment = new BookDetailsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,22 +42,41 @@ public class MainActivity extends AppCompatActivity {
             bookList.add(newBookObj);
         }
 
-
-        BookListFragment listFragment = new BookListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("BookObjects", bookList);
         //bundle.putSerializable("hashedBooks", books);
         listFragment.setArguments(bundle);
 
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().add(R.id.mainContainer, listFragment).addToBackStack(null).commit();
+        int orientation = getResources().getConfiguration().orientation;
 
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-//        listFragment.setOnBookSelectedListener(new OnBookelectedListener() {
-//            @Override
-//            public void onselected(int index) {
-//
-//            }
-//        }
+            fm.beginTransaction().add(R.id.landContainerList, listFragment).addToBackStack(null).commit();
+            fm.beginTransaction().add(R.id.landContainerDetails, detailsFragment).addToBackStack(null).commit();
+
+        }
+        else {
+
+            fm.beginTransaction().add(R.id.mainContainer, listFragment).addToBackStack(null).commit();
+
+        }
+
+    }
+
+    @Override
+    public void onBookSelected(int index) {
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("Jeffery", index);
+            detailsFragment.setArguments(bundle);
+        }
+        else {
+            BookDetailsFragment detailsFragment = new BookDetailsFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.mainContainer, detailsFragment).addToBackStack(null).commit();
+        }
     }
 }
+

@@ -42,6 +42,8 @@ public class BookListFragment extends Fragment {
     ArrayList<Book> bookList;
     ArrayList<String> titles;
     ArrayList<String> authors;
+
+    private CallBackInterface callBack;
 //  ***************************
 
     // TODO: Rename and change types of parameters
@@ -124,13 +126,9 @@ public class BookListFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BookDetailsFragment detailsFragment = new BookDetailsFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("Jeffery", position);
-                detailsFragment.setArguments(bundle);
 
-                FragmentManager fm = getFragmentManager();
-                fm.beginTransaction().replace(R.id.mainContainer, detailsFragment).addToBackStack(null).commit();
+                callBack.onBookSelected(position);
+
             }
         });
 
@@ -144,22 +142,22 @@ public class BookListFragment extends Fragment {
 //        }
 //    }
 //
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof CallBackInterface) {
+            callBack = (CallBackInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement CallBackInterface");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callBack = null;
+    }
 
     /**
      * This interface must be implemented by activities that contain this
