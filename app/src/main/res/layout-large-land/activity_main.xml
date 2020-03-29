@@ -7,13 +7,13 @@
     tools:context=".MainActivity">
 
     <FrameLayout
-        android:id="@+id/portContainerList_Tablet"
+        android:id="@+id/landContainerList_Large"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/portContainerDetails_Tablet"
+        android:id="@+id/landContainerDetails_Large"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>

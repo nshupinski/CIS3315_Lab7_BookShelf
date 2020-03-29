@@ -50,32 +50,69 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         FragmentManager fm = getSupportFragmentManager();
         int orientation = getResources().getConfiguration().orientation;
 
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if ((orientation == Configuration.ORIENTATION_LANDSCAPE) && !((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE)) {
 
             fm.beginTransaction().add(R.id.landContainerList, listFragment).addToBackStack(null).commit();
             fm.beginTransaction().add(R.id.landContainerDetails, detailsFragment).addToBackStack(null).commit();
 
         }
-        else {
+        else if ((orientation == Configuration.ORIENTATION_PORTRAIT) && !((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE)){
 
             fm.beginTransaction().add(R.id.mainContainer, listFragment).addToBackStack(null).commit();
 
+        }
+        else if ((orientation == Configuration.ORIENTATION_PORTRAIT) && ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+
+            fm.beginTransaction().add(R.id.portContainerList_Large, listFragment).addToBackStack(null).commit();
+            fm.beginTransaction().add(R.id.portContainerDetails_Large, detailsFragment).addToBackStack(null).commit();
+
+        }
+        else {
+            fm.beginTransaction().add(R.id.landContainerList_Large, listFragment).addToBackStack(null).commit();
+            fm.beginTransaction().add(R.id.landContainerDetails_Large, detailsFragment).addToBackStack(null).commit();
         }
 
     }
 
     @Override
     public void onBookSelected(int index) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("Jeffery", index);
         int orientation = getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("Jeffery", index);
-            detailsFragment.setArguments(bundle);
+        if((orientation == Configuration.ORIENTATION_LANDSCAPE) && !((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+            BookDetailsFragment frag = new BookDetailsFragment();
+            frag.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.landContainerDetails, frag).addToBackStack(null).commit();
         }
-        else {
-            BookDetailsFragment detailsFragment = new BookDetailsFragment();
+        else if ((orientation == Configuration.ORIENTATION_PORTRAIT) && !((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+            detailsFragment.setArguments(bundle);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.mainContainer, detailsFragment).addToBackStack(null).commit();
+        }
+        else if ((orientation == Configuration.ORIENTATION_LANDSCAPE) && ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+            BookDetailsFragment frag = new BookDetailsFragment();
+            frag.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.landContainerDetails_Large, frag).addToBackStack(null).commit();
+        }
+        else {
+            BookDetailsFragment frag = new BookDetailsFragment();
+            frag.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.portContainerDetails_Large, frag).addToBackStack(null).commit();
         }
     }
 }

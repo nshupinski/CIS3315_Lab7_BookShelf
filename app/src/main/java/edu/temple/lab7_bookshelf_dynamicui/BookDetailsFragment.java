@@ -1,16 +1,19 @@
 package edu.temple.lab7_bookshelf_dynamicui;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link BookDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BookDetailsFragment extends Fragment {
+public class BookDetailsFragment extends Fragment implements CallBackInterface {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -95,6 +98,20 @@ public class BookDetailsFragment extends Fragment {
         }
 
         return v;
+    }
+
+
+    @Override
+    public void onBookSelected(int index) {
+        Resources res = getResources();
+        String[] titles = res.getStringArray(R.array.titles);
+        String[] authors = res.getStringArray(R.array.authors);
+        //Bundle bundle = getArguments();
+        //if(bundle != null) {
+            //index = bundle.getInt("Jeffery");
+            txtBookName.setText(titles[index]);
+            txtAuthor.setText(authors[index]);
+        //}
     }
 
     // TODO: Rename method, update argument and hook method into UI event
