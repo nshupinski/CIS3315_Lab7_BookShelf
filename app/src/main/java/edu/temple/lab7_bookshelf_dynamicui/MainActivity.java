@@ -28,14 +28,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         Resources res = getResources();
         String[] titles = res.getStringArray(R.array.titles);
         String[] authors = res.getStringArray(R.array.authors);
-        ArrayList<HashMap> books = new ArrayList<>();
         ArrayList<Book> bookList = new ArrayList<>();
         for(int i = 0; i < titles.length; i++) {
-            HashMap newBook = new HashMap();
-            newBook.put("title", titles[i]);
-            newBook.put("author", authors[i]);
-            books.add(newBook);
-
             Book newBookObj = new Book();
             newBookObj.title = titles[i];
             newBookObj.author = authors[i];
@@ -44,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("BookObjects", bookList);
-        //bundle.putSerializable("hashedBooks", books);
         listFragment.setArguments(bundle);
 
         FragmentManager fm = getSupportFragmentManager();
