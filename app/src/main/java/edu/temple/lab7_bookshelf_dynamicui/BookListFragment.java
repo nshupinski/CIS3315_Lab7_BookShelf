@@ -78,8 +78,7 @@ public class BookListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            bookList = (ArrayList) getArguments().getSerializable("BookObjects");
         }
     }
 
@@ -90,45 +89,12 @@ public class BookListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_book_list, container, false);
         ListView lv = v.findViewById(R.id.bookListView);
 
-//        Resources res = getResources();
-//        String[] titles = res.getStringArray(R.array.titles);
-//        String[] authors = res.getStringArray(R.array.authors);
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            bookList = (ArrayList<Book>) bundle.getSerializable("BookObjects");
-//
-//            for(int i = 0; i < 11; i++) {
-//                titles.add(bundle.get("title").toString());
-//                Toast.makeText(getActivity(), bundle.get("title").toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, bookList) {
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
-                    TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                    TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-                    //Toast.makeText(getContext(), text2.toString(), Toast.LENGTH_SHORT).show();
-
-
-                    text1.setText(bookList.get(position).getName());
-                    //text2.setText(bookList.get(position).getAuthor());
-                    return view;
-                }
-            };
-
-            lv.setAdapter(adapter);
-
-        }
+        lv.setAdapter(new listViewAdapter(getContext(), bookList));
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 callBack.onBookSelected(position);
-
             }
         });
 
