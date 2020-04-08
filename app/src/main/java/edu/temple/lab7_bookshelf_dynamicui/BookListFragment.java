@@ -13,11 +13,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,10 +50,9 @@ public class BookListFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
 //  ***************************
-    //ArrayList<HashMap> books;
     ArrayList<Book> bookList;
-    ArrayList<String> titles;
-    ArrayList<String> authors;
+    listViewAdapter adapter;
+    ListView lv;
 
     private CallBackInterface callBack;
 //  ***************************
@@ -85,11 +96,12 @@ public class BookListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_list, container, false);
-        ListView lv = v.findViewById(R.id.bookListView);
+        lv = v.findViewById(R.id.bookListView);
 
-        lv.setAdapter(new listViewAdapter(getContext(), bookList));
+        // Set adapter
+        adapter = new listViewAdapter(getContext(), bookList);
+        lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -101,13 +113,6 @@ public class BookListFragment extends Fragment {
         return v;
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -118,26 +123,21 @@ public class BookListFragment extends Fragment {
                     + " must implement CallBackInterface");
         }
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
         callBack = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+    public void refresh() {
+        if (getArguments() != null) {
+            bookList = (ArrayList) getArguments().getSerializable("BookObjects");
+        }
+        adapter = null;
+        adapter = new listViewAdapter(getContext(), bookList);
+        lv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        lv.invalidateViews();
+    }
 }
 

@@ -12,8 +12,11 @@ import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -39,6 +42,7 @@ public class BookDetailsFragment extends Fragment implements CallBackInterface {
 //  *********************************
     TextView txtBookName;
     TextView txtAuthor;
+    ImageView image;
 //  *********************************
 
     //private OnFragmentInteractionListener mListener;
@@ -82,6 +86,8 @@ public class BookDetailsFragment extends Fragment implements CallBackInterface {
 
         txtBookName = v.findViewById(R.id.txtBookName);
         txtAuthor = v.findViewById(R.id.txtAuthor);
+        image = v.findViewById(R.id.imageViewCover);
+
 
         // get resources
         Resources res = getResources();
@@ -111,6 +117,7 @@ public class BookDetailsFragment extends Fragment implements CallBackInterface {
             //index = bundle.getInt("Jeffery");
             txtBookName.setText(titles[index]);
             txtAuthor.setText(authors[index]);
+            //Picasso.get().load().into();
         //}
     }
 
