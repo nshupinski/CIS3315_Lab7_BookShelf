@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -91,6 +92,10 @@ public class BookListFragment extends Fragment {
         if (getArguments() != null) {
             bookList = (ArrayList) getArguments().getSerializable("BookObjects");
         }
+
+        if(savedInstanceState != null) {
+            savedInstanceState.getSerializable("bookList");
+        }
     }
 
     @Override
@@ -138,6 +143,13 @@ public class BookListFragment extends Fragment {
         lv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         lv.invalidateViews();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable("bookList", bookList);
     }
 }
 

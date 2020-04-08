@@ -25,7 +25,10 @@ public class listViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        if (bookList != null) {
+            return bookList.size();
+        }
+        else {return 0;}
     }
 
     @Override
@@ -48,13 +51,13 @@ public class listViewAdapter extends BaseAdapter {
             We could do this in code, but this seems a little easier
              */
             convertView = LayoutInflater.from(context).inflate(R.layout.books_adapter_layout, parent, false);
-
+        }
             titleTextView = convertView.findViewById(R.id.titleTextView);
             authorTextView = convertView.findViewById(R.id.authorTextView);
 
             titleTextView.setText(bookList.get(position).getName());
             authorTextView.setText(bookList.get(position).getAuthor());
-        }
+
         return convertView;
     }
 }
