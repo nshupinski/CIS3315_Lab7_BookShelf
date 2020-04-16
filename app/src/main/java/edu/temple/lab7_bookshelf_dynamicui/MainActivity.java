@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements CallBackInterface {
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     BookDetailsFragment detailsFragment = new BookDetailsFragment();
     RequestQueue requestQueue;
     EditText editSearch;
-    listViewAdapter adapter;
+    ArrayList<Book> bookList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                             public void onResponse(JSONArray response) {
                                 try {
 
-                                    ArrayList<Book> bookList = new ArrayList<>();
+                                    bookList = new ArrayList<>();
                                     for(int i = 0; i < response.length(); i++) {
                                         Book newBookObj = new Book();
                                         newBookObj.title = response.getJSONObject(i).getString("title");
@@ -120,35 +121,33 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
 
     @Override
     public void onBookSelected(int index) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("Jeffery", index);
+        Book book = bookList.get(index);
+        detailsFragment.onBookSelected(book);
         int orientation = getResources().getConfiguration().orientation;
+        // Landscape small
         if((orientation == Configuration.ORIENTATION_LANDSCAPE) && !((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_LARGE)) {
-            BookDetailsFragment frag = new BookDetailsFragment();
-            frag.setArguments(bundle);
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.landContainerDetails, frag).addToBackStack(null).commit();
+            detailsFragment.onBookSelected(book);
         }
+        // Portrait small
         else if ((orientation == Configuration.ORIENTATION_PORTRAIT) && !((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_LARGE)) {
-            detailsFragment.setArguments(bundle);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.mainContainer, detailsFragment).addToBackStack(null).commit();
         }
+        // Landscape Large
         else if ((orientation == Configuration.ORIENTATION_LANDSCAPE) && ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_LARGE)) {
             BookDetailsFragment frag = new BookDetailsFragment();
-            frag.setArguments(bundle);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.landContainerDetails_Large, frag).addToBackStack(null).commit();
         }
+        // Portrait Large
         else {
             BookDetailsFragment frag = new BookDetailsFragment();
-            frag.setArguments(bundle);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.portContainerDetails_Large, frag).addToBackStack(null).commit();
         }
