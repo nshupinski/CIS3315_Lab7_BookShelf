@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements CallBackInterface {
+public class MainActivity extends AppCompatActivity implements CallBackInterface, PlayInterface {
 
     BookListFragment listFragment = new BookListFragment();
     BookDetailsFragment detailsFragment = new BookDetailsFragment();
@@ -151,6 +152,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.portContainerDetails_Large, frag).addToBackStack(null).commit();
         }
+    }
+
+    @Override
+    public void playButtonClicked(Book book) {
+
     }
 }
 

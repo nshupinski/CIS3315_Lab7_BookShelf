@@ -11,9 +11,10 @@
 
     <ListView
         android:id="@+id/bookListView"
-        android:layout_width="379dp"
-        android:layout_height="523dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="352dp"
+        android:layout_height="471dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="92dp"
         android:background="#FFFFFF"
         android:cacheColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"

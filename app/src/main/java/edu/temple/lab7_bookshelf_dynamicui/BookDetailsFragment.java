@@ -13,6 +13,8 @@ import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +49,26 @@ public class BookDetailsFragment extends Fragment {
     String title;
     String author;
     String imageLink;
+    Button btnPlay;
+
+    private PlayInterface play;
 //  *********************************
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof PlayInterface) {
+            play = (PlayInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement CallBackInterface");
+        }
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        play = null;
+    }
 
     public BookDetailsFragment() {}
 
@@ -87,10 +108,18 @@ public class BookDetailsFragment extends Fragment {
         txtBookName = v.findViewById(R.id.txtBookName);
         txtAuthor = v.findViewById(R.id.txtAuthor);
         image = v.findViewById(R.id.imageViewCover);
+        btnPlay = v.findViewById(R.id.btnPlay);
 
         txtBookName.setText(title);
         txtAuthor.setText(author);
         Picasso.get().load(imageLink).into(image);
+
+//        btnPlay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                play.fragmentButtonClicked();
+//            }
+//        });
 
         return v;
     }
@@ -99,6 +128,10 @@ public class BookDetailsFragment extends Fragment {
         title = book.title;
         author = book.author;
         imageLink = book.coverURL;
+    }
+
+    public void onPlayClicked() {
+
     }
 
     @Override
