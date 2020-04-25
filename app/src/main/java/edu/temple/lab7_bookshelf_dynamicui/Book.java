@@ -6,6 +6,7 @@ public class Book {
     String title;
     String author;
     String coverURL;
+    int duration;
 
     public String getName() {
         return title;
