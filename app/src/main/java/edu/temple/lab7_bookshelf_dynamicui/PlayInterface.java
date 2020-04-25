@@ -2,5 +2,5 @@ package edu.temple.lab7_bookshelf_dynamicui;
 
 public interface PlayInterface {
 
-    void playButtonClicked(Book book);
+    void playButtonClicked(int index);
 }

@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -35,6 +40,25 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     EditText editSearch;
     ArrayList<Book> bookList;
 
+    ImageButton btnStop;
+
+    MyAudioService myAudioService;
+    boolean connected;
+    Intent serviceIntent;
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            connected = true;
+            myAudioService = ((MyAudioService.AudioBinder) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            connected = false;
+            myAudioService = null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +66,14 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
 
         requestQueue = Volley.newRequestQueue(this);
         editSearch = findViewById(R.id.editTextSearch);
+        btnStop = findViewById(R.id.btnStop);
+
+        serviceIntent = new Intent(MainActivity.this, MyAudioService.class);
+
+
+        // bind to service
+        bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
+
 
         // Set orientation on startup
         FragmentManager fm = getSupportFragmentManager();
@@ -118,18 +150,27 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 requestQueue.add(jsonRequest);
             }
         });
+
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(connected) {
+                    myAudioService.stopAudio();
+                }
+            }
+        });
     }
 
     @Override
     public void onBookSelected(int index) {
         Book book = bookList.get(index);
-        detailsFragment.onBookSelected(book);
+        detailsFragment.onBookSelected(book, index);
         int orientation = getResources().getConfiguration().orientation;
         // Landscape small
         if((orientation == Configuration.ORIENTATION_LANDSCAPE) && !((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_LARGE)) {
-            detailsFragment.onBookSelected(book);
+            //detailsFragment.onBookSelected(book, index);
         }
         // Portrait small
         else if ((orientation == Configuration.ORIENTATION_PORTRAIT) && !((getResources().getConfiguration().screenLayout &
@@ -155,8 +196,10 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     }
 
     @Override
-    public void playButtonClicked(Book book) {
-
+    public void playButtonClicked(int index) {
+        if(connected) {
+            myAudioService.playAudio();
+        }
     }
 }
 

@@ -50,6 +50,7 @@ public class BookDetailsFragment extends Fragment {
     String author;
     String imageLink;
     Button btnPlay;
+    int bookIndex;
 
     private PlayInterface play;
 //  *********************************
@@ -114,25 +115,26 @@ public class BookDetailsFragment extends Fragment {
         txtAuthor.setText(author);
         Picasso.get().load(imageLink).into(image);
 
-//        btnPlay.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                play.fragmentButtonClicked();
-//            }
-//        });
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                play.playButtonClicked(bookIndex);
+            }
+        });
 
         return v;
     }
 
-    public void onBookSelected(Book book) {
+    public void onBookSelected(Book book, int index) {
         title = book.title;
         author = book.author;
         imageLink = book.coverURL;
+        bookIndex = index;
     }
 
-    public void onPlayClicked() {
-
-    }
+//    public void onPlayClicked() {
+//
+//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
