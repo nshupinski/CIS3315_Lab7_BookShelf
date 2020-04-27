@@ -158,11 +158,27 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             @Override
             public void onClick(View v) {
                 if(connected) {
-                    //myAudioService.stopAudio();
+                    myAudioService.stop();
+                    stopService(serviceIntent);
+                }
+            }
+        });
+
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(connected) {
+                    myAudioService.pause();
                 }
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
+    };
 
     @Override
     public void onBookSelected(int index) {
@@ -173,7 +189,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         if((orientation == Configuration.ORIENTATION_LANDSCAPE) && !((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_LARGE)) {
-            //detailsFragment.onBookSelected(book, index);
+            //FragmentManager fm = getSupportFragmentManager();
+            //fm.beginTransaction().add(R.id.mainContainer, detailsFragment).addToBackStack(null).commit();
         }
         // Portrait small
         else if ((orientation == Configuration.ORIENTATION_PORTRAIT) && !((getResources().getConfiguration().screenLayout &
@@ -201,7 +218,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     @Override
     public void playButtonClicked(int index) {
         if(connected) {
-            myAudioService.play(index);
+            myAudioService.play(index + 1);
+            startService(serviceIntent);
         }
     }
 }
