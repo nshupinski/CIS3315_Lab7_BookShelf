@@ -32,6 +32,8 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import edu.temple.audiobookplayer.AudiobookService;
+
 public class MainActivity extends AppCompatActivity implements CallBackInterface, PlayInterface {
 
     BookListFragment listFragment = new BookListFragment();
@@ -39,17 +41,17 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     RequestQueue requestQueue;
     EditText editSearch;
     ArrayList<Book> bookList;
-
+    ImageButton btnPause;
     ImageButton btnStop;
 
-    MyAudioService myAudioService;
+    AudiobookService.MediaControlBinder myAudioService;
     boolean connected;
     Intent serviceIntent;
     ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             connected = true;
-            myAudioService = ((MyAudioService.AudioBinder) service).getService();
+            myAudioService = ((AudiobookService.MediaControlBinder) service);
         }
 
         @Override
@@ -67,8 +69,9 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         requestQueue = Volley.newRequestQueue(this);
         editSearch = findViewById(R.id.editTextSearch);
         btnStop = findViewById(R.id.btnStop);
+        btnPause = findViewById(R.id.btnPause);
 
-        serviceIntent = new Intent(MainActivity.this, MyAudioService.class);
+        serviceIntent = new Intent(MainActivity.this, AudiobookService.class);
 
 
         // bind to service
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             @Override
             public void onClick(View v) {
                 if(connected) {
-                    myAudioService.stopAudio();
+                    //myAudioService.stopAudio();
                 }
             }
         });
@@ -198,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     @Override
     public void playButtonClicked(int index) {
         if(connected) {
-            myAudioService.playAudio();
+            myAudioService.play(index);
         }
     }
 }

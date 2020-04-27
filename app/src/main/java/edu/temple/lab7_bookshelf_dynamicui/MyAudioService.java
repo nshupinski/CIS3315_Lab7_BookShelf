@@ -21,11 +21,13 @@ public class MyAudioService extends Service {
     }
 
     public void playAudio() {
-        new Thread() {
-            @Override
-            public void run() {
-                
-            }
-        }.start();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        }.start();
+
+
     }
 }
