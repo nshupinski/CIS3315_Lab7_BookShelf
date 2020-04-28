@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -141,8 +142,8 @@ public class BookListFragment extends Fragment {
         adapter = null;
         adapter = new listViewAdapter(getContext(), bookList);
         lv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        lv.invalidateViews();
+        //((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
+        //lv.invalidateViews();
     }
 
     @Override

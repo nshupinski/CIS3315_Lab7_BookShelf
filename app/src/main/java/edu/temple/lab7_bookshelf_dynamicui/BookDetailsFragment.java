@@ -112,9 +112,7 @@ public class BookDetailsFragment extends Fragment {
         image = v.findViewById(R.id.imageViewCover);
         btnPlay = v.findViewById(R.id.btnPlay);
 
-        txtBookName.setText(title);
-        txtAuthor.setText(author);
-        Picasso.get().load(imageLink).into(image);
+        updatePage();
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,18 +129,12 @@ public class BookDetailsFragment extends Fragment {
         author = book.author;
         imageLink = book.coverURL;
         bookIndex = index;
+        //updatePage();
     }
 
-//    public void onPlayClicked() {
-//
-//    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putString("bookName", "");
-        outState.putString("bookAuthor", "");
-        outState.putString("bookImage", "");
+    public void updatePage() {
+        txtBookName.setText(title);
+        txtAuthor.setText(author);
+        Picasso.get().load(imageLink).into(image);
     }
 }

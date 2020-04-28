@@ -20,8 +20,8 @@
             android:id="@+id/imageViewCover"
             android:layout_width="296dp"
             android:layout_height="357dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="172dp"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="144dp"
             android:src="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -10,11 +10,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -34,15 +37,23 @@ import java.util.ArrayList;
 
 import edu.temple.audiobookplayer.AudiobookService;
 
-public class MainActivity extends AppCompatActivity implements CallBackInterface, PlayInterface {
+public class MainActivity extends AppCompatActivity implements CallBackInterface, PlayInterface, Serializable {
+
+    private static final String BOOKS_KEY = "books";
+    private static final String SELECTED_BOOK_KEY = "selectedBook";
+
 
     BookListFragment listFragment = new BookListFragment();
     BookDetailsFragment detailsFragment = new BookDetailsFragment();
     RequestQueue requestQueue;
     EditText editSearch;
     ArrayList<Book> bookList;
+    Book selectedBook;
     ImageButton btnPause;
     ImageButton btnStop;
+    SeekBar seekBar;
+    int bookIndex;
+    TextView txtCurrentlyPlaying;
 
     AudiobookService.MediaControlBinder myAudioService;
     boolean connected;
@@ -70,13 +81,16 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         editSearch = findViewById(R.id.editTextSearch);
         btnStop = findViewById(R.id.btnStop);
         btnPause = findViewById(R.id.btnPause);
+        seekBar = findViewById(R.id.seekBar);
+        txtCurrentlyPlaying = findViewById(R.id.txtCurrentlyPlaying);
+
+        final Handler progressHandler = new Handler();
 
         serviceIntent = new Intent(MainActivity.this, AudiobookService.class);
 
 
         // bind to service
         bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
-
 
         // Set orientation on startup
         FragmentManager fm = getSupportFragmentManager();
@@ -112,6 +126,17 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         else {
             fm.beginTransaction().add(R.id.landContainerList_Large, listFragment).addToBackStack(null).commit();
             fm.beginTransaction().add(R.id.landContainerDetails_Large, detailsFragment).addToBackStack(null).commit();
+        }
+
+        // get saved instance state
+        if (savedInstanceState != null) {
+            bookList = (ArrayList<Book>) savedInstanceState.getSerializable(BOOKS_KEY);
+            //selectedBook = savedInstanceState.getParcelable(SELECTED_BOOK_KEY);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("BookObjects", bookList);
+            listFragment.setArguments(bundle);
+            //listFragment.refresh();
         }
 
         // Click even to search for books
@@ -172,6 +197,36 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 }
             }
         });
+        // seekbar stuff
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                myAudioService.setProgressHandler(progressHandler);
+                //AudiobookService.BookProgress bookProgress =
+                int currentlyPlayingBookDuration = bookList.get(bookIndex).duration;
+
+//                if((bookProgress.getProgress() < currentlyPlayingBookDuration)){
+//                    // the book is still unfinished
+//                    //how to set progress for your seekBar
+//                }
+//                if((bookProgress.getProgress() == currentlyPlayingBookDuration)){
+//                    // the book is finished
+//                    //what should you do for mediaControlBinder
+//                    //what should you do for “Now Playing”
+//                    //how to set progress for your seekBar
+//                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override
@@ -182,8 +237,9 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
 
     @Override
     public void onBookSelected(int index) {
-        Book book = bookList.get(index);
-        detailsFragment.onBookSelected(book, index);
+        bookIndex = index;
+        selectedBook = bookList.get(index);
+        detailsFragment.onBookSelected(selectedBook, index);
         int orientation = getResources().getConfiguration().orientation;
         // Landscape small
         if((orientation == Configuration.ORIENTATION_LANDSCAPE) && !((getResources().getConfiguration().screenLayout &
@@ -191,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 Configuration.SCREENLAYOUT_SIZE_LARGE)) {
             //FragmentManager fm = getSupportFragmentManager();
             //fm.beginTransaction().add(R.id.mainContainer, detailsFragment).addToBackStack(null).commit();
+            detailsFragment.onBookSelected(selectedBook, index);
         }
         // Portrait small
         else if ((orientation == Configuration.ORIENTATION_PORTRAIT) && !((getResources().getConfiguration().screenLayout &
@@ -220,7 +277,17 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         if(connected) {
             myAudioService.play(index + 1);
             startService(serviceIntent);
+            txtCurrentlyPlaying.setText("Currently Playing: " + bookList.get(index).title);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save previously searched books as well as selected book
+        outState.putSerializable(BOOKS_KEY, bookList);
+        //outState.putSerializable(SELECTED_BOOK_KEY, (Serializable) selectedBook);
     }
 }
 
