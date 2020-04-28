@@ -12,6 +12,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -198,23 +199,39 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             }
         });
         // seekbar stuff
+
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+            }
+
+        };
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 myAudioService.setProgressHandler(progressHandler);
-                //AudiobookService.BookProgress bookProgress =
+                AudiobookService.BookProgress bookProgress = null;
                 int currentlyPlayingBookDuration = bookList.get(bookIndex).duration;
 
-//                if((bookProgress.getProgress() < currentlyPlayingBookDuration)){
-//                    // the book is still unfinished
-//                    //how to set progress for your seekBar
-//                }
+                //progressHandler.handleMessage();
+                if((bookProgress.getProgress() < currentlyPlayingBookDuration)){
+                    // the book is still unfinished
+                    //how to set progress for your seekBar
+                    seekBar.setProgress(bookProgress.getProgress());
+                }
 //                if((bookProgress.getProgress() == currentlyPlayingBookDuration)){
 //                    // the book is finished
 //                    //what should you do for mediaControlBinder
 //                    //what should you do for “Now Playing”
 //                    //how to set progress for your seekBar
 //                }
+
+                if(fromUser){
+                    myAudioService.seekTo(progress);
+                    seekBar.setProgress(progress);
+                }
             }
 
             @Override
